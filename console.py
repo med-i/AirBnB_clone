@@ -46,12 +46,15 @@ class HBNBCommand(cmd.Cmd):
     def do_show(self, line):
         ''' Prints the string representation of an instance '''
         command = line.split()
-        if len(command) < 1:
+        obj = models.storage.all()
+        if len(command) == 0:
             print("** class name missing **")
-        elif len(command) < 2:
-            print("** instance id missing **")
+        elif len(command) == 1:
+            if command[0] in HBNBCommand().class_names:
+                print("** instance id missing **")
+            else:
+                print("** class doesn't exist **")
         else:
-            obj = models.storage.all()
             key = command[0] + '.' + command[1]
             if key in obj:
                 print(obj[key])
@@ -61,12 +64,15 @@ class HBNBCommand(cmd.Cmd):
     def do_destroy(self, line):
         ''' Deletes an instance based on the class name and id '''
         command = line.split()
-        if len(command) < 1:
+        obj = models.storage.all()
+        if len(command) == 0:
             print("** class name missing **")
-        elif len(command) < 2:
-            print("** instance id missing **")
+        elif len(command) == 1:
+            if command[0] in  HBNBCommand().class_names:
+                print("** instance id missing **")
+            else:
+                print("** class doesn't exist **")
         else:
-            obj = models.storage.all()
             key = command[0] + '.' + command[1]
             if key in obj:
                 del obj[key]
@@ -77,16 +83,26 @@ class HBNBCommand(cmd.Cmd):
     def do_update(self, line):
         '''  Updates an instance based on the class name and id '''
         command = line.split()
-        if len(command) < 1:
+        obj = models.storage.all()
+        if len(command) == 0:
             print("** class name missing **")
-        elif len(command) < 2:
-            print("** instance id missing **")
-        elif len(command) < 3:
-            print("** attribute name missing **")
-        elif len(command) < 4:
+        elif len(command) == 1:
+            if command[0] in  HBNBCommand().class_names:
+                print("** instance id missing **")
+            else:
+                print("** class doesn't exist **")
+        elif len(command) == 2:
+            for items in obj.values():
+                key = command[0] + '.' + command[1]
+                if key in obj:
+                    print("** attribute name missing **")
+                    break
+                else:
+                    print("** no instance found **")
+                    break
+        elif len(command) == 3:
             print("** value missing **")
         else:
-            obj = models.storage.all()
             key = command[0] + '.' + command[1]
             ob = obj.get(key, None)
             if key in obj:
@@ -138,7 +154,6 @@ class HBNBCommand(cmd.Cmd):
                 id_ = cmd_id[1].replace(")", "")
                 id_ = id_.replace("\"", "")
                 line = class_name + " " + id_
-                print(line)
                 HBNBCommand().do_show(line)
             elif cmd.startswith('destroy'):
                 cmd_id = splited[1].split("(")
