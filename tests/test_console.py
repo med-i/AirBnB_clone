@@ -2,9 +2,16 @@
 ''' unittests for console.py, all features '''
 import unittest
 import models
+import re
 import subprocess
 from models.engine.file_storage import FileStorage
 from models.base_model import BaseModel
+from models.user import User
+from models.place import Place
+from models.city import City
+from models.amenity import Amenity
+from models.review import Review
+from models.state import State
 
 
 class TestConsole_CreateErrors(unittest.TestCase):
@@ -14,7 +21,9 @@ class TestConsole_CreateErrors(unittest.TestCase):
         ''' empty line + ENTER shouldn’t execute anything '''
         cmd = 'echo "" | ./console.py'
         output = "(hbnb) (hbnb) "
-        process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        process = subprocess.Popen(
+                cmd, shell=True, stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE, text=True)
         stdout, stderr = process.communicate()
         self.assertEqual(stdout, output)
 
@@ -22,7 +31,9 @@ class TestConsole_CreateErrors(unittest.TestCase):
         ''' Unknown Input '''
         cmd = 'echo "ll" | ./console.py'
         output = "(hbnb) *** Unknown syntax: ll\n(hbnb) "
-        process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        process = subprocess.Popen(
+                cmd, shell=True, stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE, text=True)
         stdout, stderr = process.communicate()
         self.assertEqual(stdout, output)
 
@@ -30,7 +41,9 @@ class TestConsole_CreateErrors(unittest.TestCase):
         ''' class name is missing '''
         cmd = 'echo "create" | ./console.py'
         output = "(hbnb) ** class name missing **\n(hbnb) "
-        process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        process = subprocess.Popen(
+                cmd, shell=True, stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE, text=True)
         stdout, stderr = process.communicate()
         self.assertEqual(stdout, output)
 
@@ -38,19 +51,24 @@ class TestConsole_CreateErrors(unittest.TestCase):
         ''' class name doesn’t exist '''
         cmd = 'echo "create MyModel" | ./console.py'
         output = "(hbnb) ** class doesn't exist **\n(hbnb) "
-        process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        process = subprocess.Popen(
+                cmd, shell=True, stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE, text=True)
         stdout, stderr = process.communicate()
         self.assertEqual(stdout, output)
+
 
 class TestConsole_showErrors(unittest.TestCase):
     ''' Test stderr in console Create cmd'''
 
     def test_showNonValid(self):
         ''' class name doesn’t exist '''
-        
+
         cmd = 'echo "show MyModel" | ./console.py'
         output = "(hbnb) ** class doesn't exist **\n(hbnb) "
-        process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        process = subprocess.Popen(
+                cmd, shell=True, stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE, text=True)
         stdout, stderr = process.communicate()
         self.assertEqual(stdout, output)
 
@@ -58,7 +76,9 @@ class TestConsole_showErrors(unittest.TestCase):
         '''  the class name is missing '''
         cmd = 'echo "show " | ./console.py'
         output = "(hbnb) ** class name missing **\n(hbnb) "
-        process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        process = subprocess.Popen(
+                cmd, shell=True, stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE, text=True)
         stdout, stderr = process.communicate()
         self.assertEqual(stdout, output)
 
@@ -66,7 +86,9 @@ class TestConsole_showErrors(unittest.TestCase):
         '''  the id is missing, '''
         cmd = 'echo "show BaseModel" | ./console.py'
         output = "(hbnb) ** instance id missing **\n(hbnb) "
-        process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        process = subprocess.Popen(
+                cmd, shell=True, stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE, text=True)
         stdout, stderr = process.communicate()
         self.assertEqual(stdout, output)
 
@@ -74,9 +96,53 @@ class TestConsole_showErrors(unittest.TestCase):
         '''  the instance of the class name doesn’t exist for the id '''
         cmd = 'echo "show BaseModel 12121211" | ./console.py'
         output = "(hbnb) ** no instance found **\n(hbnb) "
-        process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        process = subprocess.Popen(
+                cmd, shell=True, stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE, text=True)
         stdout, stderr = process.communicate()
         self.assertEqual(stdout, output)
+
+    def test_showNonValid(self):
+        ''' class name doesn’t exist '''
+
+        cmd = 'echo "show MyModel" | ./console.py'
+        output = "(hbnb) ** class doesn't exist **\n(hbnb) "
+        process = subprocess.Popen(
+                cmd, shell=True, stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE, text=True)
+        stdout, stderr = process.communicate()
+        self.assertEqual(stdout, output)
+
+    def test_showEmpty(self):
+        '''  the class name is missing '''
+        cmd = 'echo "show " | ./console.py'
+        output = "(hbnb) ** class name missing **\n(hbnb) "
+        process = subprocess.Popen(
+                cmd, shell=True, stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE, text=True)
+        stdout, stderr = process.communicate()
+        self.assertEqual(stdout, output)
+
+    def test_showIdEmpty(self):
+        '''  the id is missing, '''
+        cmd = 'echo "show BaseModel" | ./console.py'
+        output = "(hbnb) ** instance id missing **\n(hbnb) "
+        process = subprocess.Popen(
+                cmd, shell=True, stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE, text=True)
+        stdout, stderr = process.communicate()
+        self.assertEqual(stdout, output)
+
+    def test_showNonValidId(self):
+        '''  the instance of the class name doesn’t exist for the id '''
+        cmd = 'echo "show BaseModel 12121211" | ./console.py'
+        output = "(hbnb) ** no instance found **\n(hbnb) "
+        process = subprocess.Popen(
+                cmd, shell=True, stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE, text=True)
+        stdout, stderr = process.communicate()
+        self.assertEqual(stdout, output)
+
 
 class TestConsole_DestroyErrors(unittest.TestCase):
     ''' Test stderr in console destroy cmd'''
@@ -85,7 +151,9 @@ class TestConsole_DestroyErrors(unittest.TestCase):
         '''  the id is missing, '''
         cmd = 'echo "destroy BaseModel" | ./console.py'
         output = "(hbnb) ** instance id missing **\n(hbnb) "
-        process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        process = subprocess.Popen(
+                cmd, shell=True, stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE, text=True)
         stdout, stderr = process.communicate()
         self.assertEqual(stdout, output)
 
@@ -93,7 +161,9 @@ class TestConsole_DestroyErrors(unittest.TestCase):
         '''  the instance of the class name doesn’t exist for the id '''
         cmd = 'echo "destroy BaseModel 12121211" | ./console.py'
         output = "(hbnb) ** no instance found **\n(hbnb) "
-        process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        process = subprocess.Popen(
+                cmd, shell=True, stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE, text=True)
         stdout, stderr = process.communicate()
         self.assertEqual(stdout, output)
 
@@ -101,7 +171,9 @@ class TestConsole_DestroyErrors(unittest.TestCase):
         '''  the class name is missing '''
         cmd = 'echo "destroy " | ./console.py'
         output = "(hbnb) ** class name missing **\n(hbnb) "
-        process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        process = subprocess.Popen(
+                cmd, shell=True, stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE, text=True)
         stdout, stderr = process.communicate()
         self.assertEqual(stdout, output)
 
@@ -109,7 +181,9 @@ class TestConsole_DestroyErrors(unittest.TestCase):
         ''' class name doesn’t exist '''
         cmd = 'echo "destroy MyModel" | ./console.py'
         output = "(hbnb) ** class doesn't exist **\n(hbnb) "
-        process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        process = subprocess.Popen(
+                cmd, shell=True, stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE, text=True)
         stdout, stderr = process.communicate()
         self.assertEqual(stdout, output)
 
@@ -117,13 +191,16 @@ class TestConsole_DestroyErrors(unittest.TestCase):
 class TestConsole_allErrors(unittest.TestCase):
     ''' Test stderr in console all cmd'''
 
-    def test_showNonValid(self):
+    def test_allNonValid(self):
         ''' class name doesn’t exist '''
-        cmd = 'echo "destroy MyModel" | ./console.py'
+        cmd = 'echo "all MyModel" | ./console.py'
         output = "(hbnb) ** class doesn't exist **\n(hbnb) "
-        process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        process = subprocess.Popen(
+                cmd, shell=True, stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE, text=True)
         stdout, stderr = process.communicate()
         self.assertEqual(stdout, output)
+
 
 class TestConsole_UpdateErrors(unittest.TestCase):
     ''' Test stderr in console update cmd'''
@@ -132,7 +209,9 @@ class TestConsole_UpdateErrors(unittest.TestCase):
         '''  the id is missing, '''
         cmd = 'echo "update BaseModel" | ./console.py'
         output = "(hbnb) ** instance id missing **\n(hbnb) "
-        process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        process = subprocess.Popen(
+                cmd, shell=True, stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE, text=True)
         stdout, stderr = process.communicate()
         self.assertEqual(stdout, output)
 
@@ -140,7 +219,9 @@ class TestConsole_UpdateErrors(unittest.TestCase):
         '''  the instance of the class name doesn’t exist for the id '''
         cmd = 'echo "update BaseModel 12121211" | ./console.py'
         output = "(hbnb) ** no instance found **\n(hbnb) "
-        process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        process = subprocess.Popen(
+                cmd, shell=True, stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE, text=True)
         stdout, stderr = process.communicate()
         self.assertEqual(stdout, output)
 
@@ -148,7 +229,9 @@ class TestConsole_UpdateErrors(unittest.TestCase):
         '''  the class name is missing '''
         cmd = 'echo "update " | ./console.py'
         output = "(hbnb) ** class name missing **\n(hbnb) "
-        process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        process = subprocess.Popen(
+                cmd, shell=True, stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE, text=True)
         stdout, stderr = process.communicate()
         self.assertEqual(stdout, output)
 
@@ -156,12 +239,72 @@ class TestConsole_UpdateErrors(unittest.TestCase):
         ''' class name doesn’t exist '''
         cmd = 'echo "update MyModel" | ./console.py'
         output = "(hbnb) ** class doesn't exist **\n(hbnb) "
-        process = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        process = subprocess.Popen(
+                cmd, shell=True, stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE, text=True)
         stdout, stderr = process.communicate()
         self.assertEqual(stdout, output)
+
+    def test_updateNonattr(self):
+        '''attribute name is missing '''
+        cmd = 'echo "update BaseModel " | ./console.py'
+        output = "(hbnb) ** instance id missing **\n(hbnb) "
+        process = subprocess.Popen(
+                cmd, shell=True, stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE, text=True)
+        stdout, stderr = process.communicate()
+        self.assertEqual(stdout, output)
+
+
+class TestConsole_allErrors2(unittest.TestCase):
+    ''' Test stderr in console all cmd (instances by class name)'''
+
+    def test_allNonValid(self):
+        ''' class name doesn’t exist '''
+        cmd = 'echo "MyModel.all() " | ./console.py'
+        output = "(hbnb) ** class doesn't exist **\n(hbnb) "
+        process = subprocess.Popen(
+                cmd, shell=True, stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE, text=True)
+        stdout, stderr = process.communicate()
+        self.assertEqual(stdout, output)
+
+
+class TestConsole_showErrors2(unittest.TestCase):
+    ''' Test stderr in console Create cmd (instances by class name)'''
+
+    def test_showNonValid(self):
+        ''' class name doesn’t exist '''
+        cmd = 'echo "MyModel.show() " | ./console.py'
+        output = "(hbnb) ** class doesn't exist **\n(hbnb) "
+        process = subprocess.Popen(
+                cmd, shell=True, stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE, text=True)
+        stdout, stderr = process.communicate()
+        self.assertEqual(stdout, output)
+
+    def test_showIdEmpty(self):
+        '''  the id is missing, '''
+        cmd = 'echo "BaseModel.show()" | ./console.py'
+        output = "(hbnb) ** instance id missing **\n(hbnb) "
+        process = subprocess.Popen(
+                cmd, shell=True, stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE, text=True)
+        stdout, stderr = process.communicate()
+        self.assertEqual(stdout, output)
+
+    def test_showNonValidId(self):
+        '''  the instance of the class name doesn’t exist for the id '''
+        cmd = 'echo "BaseModel.show(12121211)" | ./console.py'
+        output = "(hbnb) ** no instance found **\n(hbnb) "
+        process = subprocess.Popen(
+                cmd, shell=True, stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE, text=True)
+        stdout, stderr = process.communicate()
+        self.assertEqual(stdout, output)
+
 
 if __name__ == '__main__':
     unittest.main()
     with patch('sys.stdout', new=StringIO()) as f:
         HBNBCommand().onecmd("help show")
-
