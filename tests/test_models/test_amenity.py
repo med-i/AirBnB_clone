@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """
-Unit tests for the BaseModel class.
+Unit tests for the Amenity class.
 """
 import unittest
 from models.base_model import BaseModel
@@ -8,8 +8,8 @@ import uuid
 from datetime import datetime
 
 
-class TestBaseModel(unittest.TestCase):
+class TestAmenity(unittest.TestCase):
     """
-    Test cases for BaseModel class.
+    Test cases for Amenity class.
     """
     pass
