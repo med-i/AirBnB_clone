@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-''' __init__.py file '''
+''' __init__.py file unique FileStorage instance '''
 from models.engine.file_storage import FileStorage
 
 
+''' the variable storage, an instance of FileStorage '''
 storage = FileStorage()
-FileStorage.reload(storage)
+storage.reload(storage)
