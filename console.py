@@ -162,6 +162,13 @@ class HBNBCommand(cmd.Cmd):
                 line = class_name + " " + id_
                 print(line)
                 HBNBCommand().do_destroy(line)
+            elif cmd.startswith('update'):
+                cmd_id = splited[1].split("(")
+                id_ = cmd_id[1].replace(")", "")
+                id_ = id_.replace("\"", "")
+                line = class_name + " " + id_
+                line = line.replace(",", "")
+                HBNBCommand().do_update(line)
             else:
                 print(f"*** Unknown syntax: {line}")
         except IndexError:
