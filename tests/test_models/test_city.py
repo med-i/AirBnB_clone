@@ -6,9 +6,10 @@ import unittest
 from models.base_model import BaseModel
 import uuid
 from datetime import datetime
+from models.city import City
 
 
-class TestBaseModel(unittest.TestCase):
+class TestCity(unittest.TestCase):
     """
     Test cases for BaseModel class.
     """

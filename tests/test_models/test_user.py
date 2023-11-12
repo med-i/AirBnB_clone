@@ -6,6 +6,7 @@ import unittest
 from models.base_model import BaseModel
 import uuid
 from datetime import datetime
+from models.user import User
 
 
 class TestUser(unittest.TestCase):
