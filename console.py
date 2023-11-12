@@ -1,5 +1,5 @@
-#!/usr/bin/env python3
-''' command interpreter '''
+#!/usr/bin/python3
+''' contains the entry point of the command interpreter '''
 import cmd
 import models
 from models.base_model import BaseModel
