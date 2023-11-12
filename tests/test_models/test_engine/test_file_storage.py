@@ -5,6 +5,6 @@ from models.engine.file_storage import FileStorage
 from models.base_model import BaseModel
 
 
-class TestFile_storage(unittest.TestCase):
+class TestFileStorage(unittest.TestCase):
     '''  tests for file_storage '''
     pass
