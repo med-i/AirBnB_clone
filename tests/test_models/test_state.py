@@ -13,4 +13,12 @@ class TestState(unittest.TestCase):
     """
     Test cases for State class.
     """
-    pass
+    def testname(self):
+        ''' test first name'''
+        State.name = "Messi"
+        self.assertEqual(State.name, "Messi")
+
+    def testnameEmpty(self):
+        ''' test first name empty '''
+        State.name = ""
+        self.assertEqual(State.name, "")

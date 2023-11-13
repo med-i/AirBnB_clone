@@ -13,4 +13,32 @@ class TestReview(unittest.TestCase):
     """
     Test cases for Review class.
     """
-    pass
+    def testplace_id(self):
+        ''' test place_id'''
+        Review.place_id = "1b12"
+        self.assertEqual(Review.place_id, "1b12")
+
+    def testplace_idEmpty(self):
+        ''' test place_id empty '''
+        Review.place_id = ""
+        self.assertEqual(Review.place_id, "")
+
+    def testplace_id(self):
+        ''' test user_id'''
+        Review.user_id = "1b12"
+        self.assertEqual(Review.user_id, "1b12")
+
+    def testplace_idEmpty(self):
+        ''' test user_id empty '''
+        Review.user_id = ""
+        self.assertEqual(Review.user_id, "")
+
+    def testtext(self):
+        ''' test text'''
+        Review.text = "hello world"
+        self.assertEqual(Review.user_id, "hello world")
+
+    def testtextEmpty(self):
+        ''' test text empty '''
+        Review.text = ""
+        self.assertEqual(Review.text, "")

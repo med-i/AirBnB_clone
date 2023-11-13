@@ -13,4 +13,12 @@ class TestAmenity(unittest.TestCase):
     """
     Test cases for Amenity class.
     """
-    pass
+    def testname(self):
+        ''' test first name'''
+        Amenity.name = "Messi"
+        self.assertEqual(Amenity.name, "Messi")
+
+    def testnameEmpty(self):
+        ''' test first name empty '''
+        Amenity.name = ""
+        self.assertEqual(Amenity.name, "")
