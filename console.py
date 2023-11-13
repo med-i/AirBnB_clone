@@ -1,5 +1,5 @@
-#!/usr/bin/python3
-''' contains the entry point of the command interpreter '''
+#!/usr/bin/env python3
+''' command interpreter '''
 import cmd
 import models
 from models.base_model import BaseModel
@@ -59,7 +59,10 @@ class HBNBCommand(cmd.Cmd):
             if key in obj:
                 print(obj[key])
             else:
-                print("** no instance found **")
+                if command[0] in HBNBCommand().class_names:
+                    print("** no instance found **")
+                else:
+                    print("** class doesn't exist **")
 
     def do_destroy(self, line):
         ''' Deletes an instance based on the class name and id '''
@@ -78,7 +81,10 @@ class HBNBCommand(cmd.Cmd):
                 del obj[key]
                 models.storage.save()
             else:
-                print("** no instance found **")
+                if command[0] in HBNBCommand().class_names:
+                    print("** no instance found **")
+                else:
+                    print("** class doesn't exist **")
 
     def do_update(self, line):
         '''  Updates an instance based on the class name and id '''
@@ -111,7 +117,10 @@ class HBNBCommand(cmd.Cmd):
                 setattr(ob, attr, attr_value.lstrip('"').rstrip('"'))
                 models.storage.save()
             else:
-                print("** no instance found **")
+                if command[0] in HBNBCommand().class_names:
+                    print("** no instance found **")
+                else:
+                    print("** class doesn't exist **")
 
     def do_all(self, line):
         ''' Prints all string representation of all instances '''
@@ -168,6 +177,7 @@ class HBNBCommand(cmd.Cmd):
                 id_ = id_.replace("\"", "")
                 line = class_name + " " + id_
                 line = line.replace(",", "")
+                print(line)
                 HBNBCommand().do_update(line)
             else:
                 print(f"*** Unknown syntax: {line}")
