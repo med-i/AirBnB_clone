@@ -36,7 +36,7 @@ class TestReview(unittest.TestCase):
     def testtext(self):
         ''' test text'''
         Review.text = "hello world"
-        self.assertEqual(Review.user_id, "hello world")
+        self.assertEqual(Review.text, "hello world")
 
     def testtextEmpty(self):
         ''' test text empty '''
